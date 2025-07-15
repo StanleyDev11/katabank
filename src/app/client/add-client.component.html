@@ -1,0 +1,32 @@
+<div class="modal-backdrop" (click)="fermerParClicExterieur($event)">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <!-- Bouton de fermeture -->
+    <button class="btn-close" type="button" (click)="close.emit()">✖</button>
+
+    <h3>➕ Ajouter un client</h3>
+    <form (ngSubmit)="ajouter()">
+      <label>Code Client</label>
+      <input [(ngModel)]="client.codeClient" name="codeClient" maxlength="6" required />
+      <div class="error-msg" *ngIf="errorMessages.codeClient">{{ errorMessages.codeClient }}</div>
+
+      <label>Nom</label>
+      <input [(ngModel)]="client.nom" name="nom" required />
+
+      <label>Prénom</label>
+      <input [(ngModel)]="client.prenom" name="prenom" required />
+
+      <label>Numéro de Compte</label>
+      <input [(ngModel)]="client.numeroCompte" name="numeroCompte" maxlength="18" required />
+      <div class="error-msg" *ngIf="errorMessages.numeroCompte">{{ errorMessages.numeroCompte }}</div>
+
+      <label>Solde</label>
+      <input [(ngModel)]="client.solde" name="solde" type="number" required />
+      <div class="error-msg" *ngIf="errorMessages.solde">{{ errorMessages.solde }}</div>
+
+      <div class="modal-buttons">
+        <button type="button" class="btn-cancel" (click)="close.emit()">Annuler</button>
+        <button type="submit" class="btn-save">Ajouter</button>
+      </div>
+    </form>
+  </div>
+</div>

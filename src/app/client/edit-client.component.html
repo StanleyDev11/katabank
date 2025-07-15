@@ -1,0 +1,30 @@
+<div class="modal-backdrop" (click)="fermerParClicExterieur($event)">
+<div class="modal" (click)="$event.stopPropagation()">
+<!-- Bouton de fermeture -->
+<button class="btn-close" type="button" (click)="close.emit()">✖</button>
+
+ <h3>✏️ Modifier le client</h3>
+ <form (ngSubmit)="modifier()">
+ <label>Code Client (non modifiable)</label>
+ <input [ngModel]="client.codeClient" name="codeClient" disabled />
+
+ <label>Nom</label>
+<input [(ngModel)]="client.nom" name="nom" required />
+
+ <label>Prénom</label>
+ <input [(ngModel)]="client.prenom" name="prenom" required />
+
+ <label>Numéro de Compte</label>
+ <input [(ngModel)]="client.numeroCompte" name="numeroCompte" maxlength="18" required />
+ <label>Solde</label>
+ <input [(ngModel)]="client.solde" name="solde" type="number" required />
+
+ <div class="error-msg" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+<div class="modal-buttons">
+ <button type="button" class="btn-cancel" (click)="close.emit()">Annuler</button>
+ <button type="submit" class="btn-save">Modifier</button>
+ </div>
+ </form>
+ </div>
+</div>

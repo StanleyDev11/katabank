@@ -1,0 +1,53 @@
+<header class="header">
+  <div class="logo">
+    <i class="fas fa-university"></i> KataBank
+  </div>
+  <div class="header-actions">
+    <span class="date">{{ currentDate | date: 'fullDate' }}</span>
+    <button (click)="logout()" class="logout-btn">
+      <i class="fas fa-sign-out-alt"></i> Déconnexion
+    </button>
+  </div>
+</header>
+
+<main class="dashboard">
+  <h2 class="welcome">Bienvenue sur le tableau de bord</h2>
+
+  <section class="card-group">
+    <div class="card card-primary">
+      <div class="card-icon"><i class="fas fa-users"></i></div>
+      <div>
+        <h3>Clients</h3>
+        <div class="value">{{ stats.clients }}</div>
+        <div class="badge">+12% ce mois</div>
+      </div>
+    </div>
+
+    <div class="card card-success">
+      <div class="card-icon"><i class="fas fa-exchange-alt"></i></div>
+      <div>
+        <h3>Transactions</h3>
+        <div class="value">{{ stats.transactions }}</div>
+        <div class="badge">+8% aujourd'hui</div>
+      </div>
+    </div>
+
+    <div class="card card-warning">
+      <div class="card-icon"><i class="fas fa-exclamation-triangle"></i></div>
+      <div>
+        <h3>Alertes</h3>
+        <div class="value">{{ stats.alerts }}</div>
+        <div class="badge">À traiter</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="actions">
+    <button (click)="goToClient()" class="action-btn primary">
+      <i class="fas fa-user-cog"></i> Gérer les clients
+    </button>
+    <button class="action-btn secondary">
+      <i class="fas fa-list-alt"></i> Voir les transactions
+    </button>
+  </section>
+</main>

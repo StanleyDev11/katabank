@@ -1,0 +1,77 @@
+<div class="paiement-form-container">
+  <h2>💳 Effectuer un paiement</h2>
+
+  <form (ngSubmit)="effectuerPaiement()">
+
+    <!-- Recherche de client -->
+    <label>🔍 Rechercher un client</label>
+    <input
+      type="text"
+      name="clientSearch"
+      [(ngModel)]="clientSearch"
+      (input)="rechercherClient()"
+      placeholder="Nom ou numéro client"
+    />
+    <ul *ngIf="clients.length > 0" class="client-list">
+      <li *ngFor="let client of clients" (click)="selectionnerClient(client)">
+        {{ client.nom }} ({{ client.codeClient }})
+      </li>
+    </ul>
+
+    <!-- Code client -->
+    <label>Code Client sélectionné</label>
+    <input
+      type="text"
+      name="codeClient"
+      [(ngModel)]="paiement.codeClient"
+      readonly
+      required
+    />
+
+    <!-- Numéro de facture -->
+    <label>Numéro de Facture</label>
+    <input
+      type="text"
+      name="numeroFacture"
+      [(ngModel)]="paiement.numeroFacture"
+      readonly
+      required
+    />
+
+    <!-- Montant -->
+    <label>Montant</label>
+    <input
+      type="text"
+      name="montant"
+      [(ngModel)]="paiement.montant"
+      readonly
+      required
+    />
+
+    <!-- Mode de paiement -->
+    <label>Mode de Paiement</label>
+    <select
+      name="modePaiement"
+      [(ngModel)]="paiement.modePaiement"
+      required
+    >
+      <option value="" disabled>-- Choisir un mode de paiement --</option>
+      <option value="ESPECE">Espèce</option>
+      <option value="VIREMENT">Virement</option>
+      <option value="CHEQUE">Chèque</option>
+      <option value="CHEQUE_CERTIFIE_CONFRERE">Chèque certifié confrère</option>
+    </select>
+
+    <!-- Date de paiement (cachée ou automatique) -->
+    <input
+      type="hidden"
+      name="datePaiement"
+      [(ngModel)]="paiement.datePaiement"
+    />
+
+    <button type="submit" [disabled]="loading">Payer</button>
+  </form>
+
+  <p class="success" *ngIf="successMessage">{{ successMessage }}</p>
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+</div>

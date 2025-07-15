@@ -1,0 +1,100 @@
+.paiement-form-container {
+max-width: 500px;
+margin: 2rem auto;
+padding: 2rem;
+background-color: #f8f9fa;
+border-radius: 12px;
+box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+font-family: "Segoe UI", sans-serif;
+}
+
+.paiement-form-container h2 {
+text-align: center;
+margin-bottom: 1.5rem;
+color: #343a40;
+}
+
+form {
+display: flex;
+flex-direction: column;
+gap: 1rem;
+}
+
+label {
+font-weight: 600;
+color: #495057;
+}
+
+input,
+select {
+padding: 0.6rem 0.8rem;
+font-size: 1rem;
+border-radius: 6px;
+border: 1px solid #ced4da;
+width: 100%;
+box-sizing: border-box;
+}
+
+input:read-only {
+background-color: #e9ecef;
+}
+
+button {
+padding: 0.75rem;
+font-size: 1rem;
+background-color: #0d6efd;
+color: white;
+border: none;
+border-radius: 6px;
+cursor: pointer;
+transition: background-color 0.2s ease-in-out;
+}
+
+button:hover:enabled {
+background-color: #0b5ed7;
+}
+
+button:disabled {
+background-color: #6c757d;
+cursor: not-allowed;
+}
+
+.success {
+color: #198754;
+font-weight: bold;
+text-align: center;
+}
+
+.error {
+color: #dc3545;
+font-weight: bold;
+text-align: center;
+}
+
+.client-list {
+list-style: none;
+padding: 0;
+margin-top: -0.5rem;
+border: 1px solid #ced4da;
+border-radius: 6px;
+background-color: white;
+max-height: 150px;
+overflow-y: auto;
+}
+
+.client-list li {
+padding: 0.5rem 0.75rem;
+cursor: pointer;
+}
+
+.client-list li:hover {
+background-color: #f1f1f1;
+}
+
+
+
+@media (max-width: 600px) {
+.paiement-form-container {
+padding: 1rem;
+}
+}

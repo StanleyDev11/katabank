@@ -1,0 +1,29 @@
+<div class="facture-search-container">
+  <h2>🔍 Rechercher une facture client</h2>
+
+  <form (ngSubmit)="rechercher()" class="form-recherche">
+    <input
+      type="text"
+      [(ngModel)]="reference"
+      name="reference"
+      placeholder="Référence de la facture"
+      required
+    />
+    <button type="submit">Rechercher</button>
+  </form>
+
+  <p *ngIf="loading">⏳ Recherche en cours...</p>
+  <p class="error-msg" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <div *ngIf="facture" class="facture-result">
+    <h3>🧾 Référence : {{ facture.reference }}</h3>
+    <p><strong>Description :</strong> {{ facture.description }}</p>
+    <p><strong>Montant :</strong> {{ facture.montant | number: '1.0-2' }} F CFA</p>
+    <p><strong>Facturier :</strong> {{ facture.facturier }}</p>
+
+    
+     <button class="btn-pay" (click)="payerFacture()">💳 Payer cette facture</button>
+
+
+  </div>
+</div>

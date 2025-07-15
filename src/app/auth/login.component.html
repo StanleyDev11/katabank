@@ -1,0 +1,32 @@
+<div class="login-wrapper">
+  <img src="assets/po.png" alt="Logo Katabank" class="logo" />
+
+  <div class="login-container">
+    <h2>Connexion à KataBank 🔐</h2>
+
+    <form (ngSubmit)="login()">
+      <input
+        type="email"
+        [(ngModel)]="email"
+        name="email"
+        placeholder="Adresse email"
+        required
+      />
+      <input
+        type="password"
+        [(ngModel)]="password"
+        name="password"
+        placeholder="Mot de passe"
+        required
+      />
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <button type="submit" [disabled]="loading">
+        {{ loading ? 'Connexion...' : 'Se connecter' }}
+      </button>
+    </form>
+  </div>
+</div>
