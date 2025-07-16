@@ -28,5 +28,23 @@ export class AdminDashboardComponent {
   goToClient() {
     this.router.navigate(['/client']);
   }
+
+  
+
+  recupererFacture() {
+    this.router.navigate(['/facture/rechercher']);
+  }
+
+  effectuerPaiement() {
+    this.router.navigate(['/paiement/creer']);
+  }
+
+  
+
+  voirHistoriquePaiements() {
+    this.router.navigate(['/paiement/transaction']);
+  }
+
+  
   
 }

@@ -1,0 +1,160 @@
+<div class="transactions-container">
+  <!-- En-tête avec titre et boutons d'action -->
+  <div class="transactions-header">
+    <div class="header-title">
+      <h2><i class="fas fa-exchange-alt"></i> Historique des Paiements</h2>
+      <p *ngIf="payments">{{ payments.length }} paiements trouvés</p>
+
+    </div>
+    
+    <div class="header-actions">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input 
+          type="text" 
+          [(ngModel)]="searchTerm" 
+          (input)="filterPayments()"
+          placeholder="Rechercher un paiement..."
+        >
+      </div>
+      <button class="export-btn" (click)="exportToExcel()">
+        <i class="fas fa-file-export"></i> Exporter
+      </button>
+      <button class="refresh-btn" (click)="loadPayments()">
+        <i class="fas fa-sync-alt" [class.fa-spin]="loading"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Filtres -->
+  <div class="filters-container">
+    <div class="filter-group">
+      <label>Date de :</label>
+      <input type="date" [(ngModel)]="startDate" (change)="filterPayments()">
+    </div>
+    <div class="filter-group">
+      <label>à :</label>
+      <input type="date" [(ngModel)]="endDate" (change)="filterPayments()">
+    </div>
+    <div class="filter-group">
+      <label>Mode de paiement :</label>
+      <select [(ngModel)]="selectedMode" (change)="filterPayments()">
+        <option value="">Tous</option>
+        <option value="VIREMENT">Virement</option>
+        <option value="ESPECE">Espèce</option>
+        <option value="CHEQUE">Chèque</option>
+        <option value="CHEQUE_CERTIFIE_CONFRERE">Chèque certifié</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Tableau des paiements -->
+  <div class="transactions-table-container">
+    <table class="transactions-table">
+      <thead>
+        <tr>
+          <th (click)="sortPayments('codeClient')">
+            Client <i class="fas fa-sort"></i>
+          </th>
+          <th (click)="sortPayments('numeroFacture')">
+            Facture <i class="fas fa-sort"></i>
+          </th>
+          <th (click)="sortPayments('montant')">
+            Montant <i class="fas fa-sort"></i>
+          </th>
+          <th (click)="sortPayments('modePaiement')">
+            Mode <i class="fas fa-sort"></i>
+          </th>
+          <th (click)="sortPayments('datePaiement')">
+            Date <i class="fas fa-sort"></i>
+          </th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let payment of filteredPayments">
+          <td class="client-cell">{{ payment.codeClient }}</td>
+          <td class="ref-cell">{{ payment.numeroFacture }}</td>
+          <td class="amount-cell">
+            {{ payment.montant | currency:'FCFA':'symbol':'1.2-2' }}
+          </td>
+          <td class="mode-cell">
+            <span [class]="'badge ' + getModeClass(payment.modePaiement)">
+              {{ getModeLabel(payment.modePaiement) }}
+            </span>
+          </td>
+          <td class="date-cell">{{ payment.datePaiement | date: 'dd/MM/yyyy' }}</td>
+          <td class="actions-cell">
+            <button class="detail-btn" (click)="viewDetails(payment)">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button class="print-btn" (click)="printReceipt(payment)">
+              <i class="fas fa-print"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="filteredPayments.length > 0">
+      <button (click)="previousPage()" [disabled]="currentPage === 1">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <span>Page {{ currentPage }} sur {{ totalPages }}</span>
+      <button (click)="nextPage()" [disabled]="currentPage === totalPages">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <!-- Aucun résultat -->
+    <div class="no-results" *ngIf="filteredPayments.length === 0">
+      <i class="fas fa-search"></i>
+      <p>Aucun paiement ne correspond à vos critères</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de détail -->
+<div class="modal" *ngIf="selectedPayment">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Détails du paiement</h3>
+      <button class="close-btn" (click)="selectedPayment = null">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="detail-row">
+        <span>Client:</span>
+        <span>{{ selectedPayment.codeClient }}</span>
+      </div>
+      <div class="detail-row">
+        <span>Numéro de facture:</span>
+        <span>{{ selectedPayment.numeroFacture }}</span>
+      </div>
+      <div class="detail-row">
+        <span>Montant:</span>
+        <span>{{ selectedPayment.montant | currency:'FCFA':'symbol':'1.2-2' }}</span>
+      </div>
+      <div class="detail-row">
+        <span>Mode de paiement:</span>
+        <span [class]="'badge ' + getModeClass(selectedPayment.modePaiement)">
+          {{ getModeLabel(selectedPayment.modePaiement) }}
+        </span>
+      </div>
+      <div class="detail-row">
+        <span>Date:</span>
+        <span>{{ selectedPayment.datePaiement | date: 'dd/MM/yyyy' }}</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="print-btn" (click)="printReceipt(selectedPayment)">
+        <i class="fas fa-print"></i> Imprimer le reçu
+      </button>
+      <button class="close-btn" (click)="selectedPayment = null">
+        Fermer
+      </button>
+    </div>
+  </div>
+</div>

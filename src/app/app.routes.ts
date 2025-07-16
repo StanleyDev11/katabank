@@ -36,6 +36,12 @@ canActivate: [authGuard]
   path: 'paiement/creer',
   loadComponent: () => import('./paiement/creer-paiement.component').then(m => m.CreerPaiementComponent),
   canActivate: [authGuard]
+},
+
+{
+  path: 'paiement/transaction',
+  loadComponent: () => import('./paiement/transaction-list.component').then(m => m.TransactionListComponent),
+  canActivate: [authGuard]
 }
 
 

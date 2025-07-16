@@ -1,77 +1,102 @@
-<div class="paiement-form-container">
-  <h2>💳 Effectuer un paiement</h2>
+<div class="landscape-payment-container">
+  <!-- Section gauche - Recherche client -->
+  <div class="client-section">
+    <div class="section-header">
+      <h2><i class="fas fa-users"></i> Clients</h2>
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input
+          type="text"
+          [(ngModel)]="clientSearch"
+          (input)="rechercherClient()"
+          placeholder="Rechercher client..."
+        />
+      </div>
+    </div>
 
-  <form (ngSubmit)="effectuerPaiement()">
+    <div class="client-list-container">
+      <div *ngFor="let client of clients" 
+           class="client-card"
+           [class.selected]="paiement.codeClient === client.codeClient"
+           (click)="selectionnerClient(client)">
+        <div class="client-avatar">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="client-info">
+          <h3>{{ client.nom }}</h3>
+          <p>{{ client.codeClient }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    <!-- Recherche de client -->
-    <label>🔍 Rechercher un client</label>
-    <input
-      type="text"
-      name="clientSearch"
-      [(ngModel)]="clientSearch"
-      (input)="rechercherClient()"
-      placeholder="Nom ou numéro client"
-    />
-    <ul *ngIf="clients.length > 0" class="client-list">
-      <li *ngFor="let client of clients" (click)="selectionnerClient(client)">
-        {{ client.nom }} ({{ client.codeClient }})
-      </li>
-    </ul>
+  <!-- Section droite - Formulaire de paiement -->
+  <div class="payment-section">
+    <div class="payment-header">
+      <h2><i class="fas fa-credit-card"></i> Nouveau Paiement</h2>
+      <button class="back-button" (click)="retourDashboard()">
+        <i class="fas fa-arrow-left"></i> Retour
+      </button>
+    </div>
+    <!-- Messages -->
+    <div *ngIf="successMessage" class="alert success">
+      <i class="fas fa-check-circle"></i> {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="alert error">
+      <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
+    </div>
 
-    <!-- Code client -->
-    <label>Code Client sélectionné</label>
-    <input
-      type="text"
-      name="codeClient"
-      [(ngModel)]="paiement.codeClient"
-      readonly
-      required
-    />
+    <div class="payment-details">
+      <!-- Section Facture -->
+      <div class="detail-group">
+        <h3><i class="fas fa-file-invoice-dollar"></i> Facture</h3>
+        <div class="detail-row">
+          <span>Numéro:</span>
+          <strong>{{ paiement.numeroFacture || 'Non spécifié' }}</strong>
+        </div>
+        <div class="detail-row">
+          <span>Montant:</span>
+          <strong class="amount">{{ paiement.montant ? (paiement.montant | currency:'FCFA':'symbol':'1.2-2') : '0,00 FCFA' }}</strong>
+        </div>
+      </div>
 
-    <!-- Numéro de facture -->
-    <label>Numéro de Facture</label>
-    <input
-      type="text"
-      name="numeroFacture"
-      [(ngModel)]="paiement.numeroFacture"
-      readonly
-      required
-    />
+      <!-- Section Client sélectionné -->
+      <div class="detail-group" *ngIf="paiement.codeClient">
+        <h3><i class="fas fa-user-check"></i> Client sélectionné</h3>
+        <div class="selected-client">
+          <i class="fas fa-user-circle"></i>
+          <div>
+            <h4>{{ selectedClientName }}</h4>
+            <p>{{ paiement.codeClient }}</p>
+          </div>
+        </div>
+      </div>
 
-    <!-- Montant -->
-    <label>Montant</label>
-    <input
-      type="text"
-      name="montant"
-      [(ngModel)]="paiement.montant"
-      readonly
-      required
-    />
+      <!-- Section Paiement -->
+      <div class="detail-group">
+        <h3><i class="fas fa-money-bill-wave"></i> Mode de paiement</h3>
+        <div class="payment-methods">
+          <div *ngFor="let method of paymentMethods" 
+               class="payment-method"
+               [class.active]="paiement.modePaiement === method.value"
+               (click)="paiement.modePaiement = method.value">
+            <i [class]="method.icon"></i>
+            <span>{{ method.label }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <!-- Mode de paiement -->
-    <label>Mode de Paiement</label>
-    <select
-      name="modePaiement"
-      [(ngModel)]="paiement.modePaiement"
-      required
-    >
-      <option value="" disabled>-- Choisir un mode de paiement --</option>
-      <option value="ESPECE">Espèce</option>
-      <option value="VIREMENT">Virement</option>
-      <option value="CHEQUE">Chèque</option>
-      <option value="CHEQUE_CERTIFIE_CONFRERE">Chèque certifié confrère</option>
-    </select>
+    <!-- Bouton de soumission -->
+    <button class="submit-btn" 
+            (click)="effectuerPaiement()"
+            [disabled]="loading || !paiement.codeClient || !paiement.modePaiement">
+      <span *ngIf="!loading">Confirmer le paiement</span>
+      <span *ngIf="loading" class="spinner">
+        <i class="fas fa-spinner fa-spin"></i> Traitement...
+      </span>
+    </button>
 
-    <!-- Date de paiement (cachée ou automatique) -->
-    <input
-      type="hidden"
-      name="datePaiement"
-      [(ngModel)]="paiement.datePaiement"
-    />
-
-    <button type="submit" [disabled]="loading">Payer</button>
-  </form>
-
-  <p class="success" *ngIf="successMessage">{{ successMessage }}</p>
-  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+    
+  </div>
 </div>

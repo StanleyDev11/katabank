@@ -1,53 +1,118 @@
 <header class="header">
-  <div class="logo">
-    <i class="fas fa-university"></i> KataBank
+  <div class="logo-container">
+    <i class="fas fa-university logo-icon"></i>
+    <h1 class="logo-text">KataBank Pro</h1>
   </div>
   <div class="header-actions">
-    <span class="date">{{ currentDate | date: 'fullDate' }}</span>
+    <div class="date-badge">
+      <i class="fas fa-calendar-alt"></i>
+      <span>{{ currentDate | date: 'fullDate' }}</span>
+    </div>
     <button (click)="logout()" class="logout-btn">
       <i class="fas fa-sign-out-alt"></i> Déconnexion
     </button>
   </div>
 </header>
 
-<main class="dashboard">
-  <h2 class="welcome">Bienvenue sur le tableau de bord</h2>
+<main class="dashboard-container">
+  <section class="welcome-section">
+    <div class="welcome-content">
+      <h1>Bonjour, Agent KataBank</h1>
+      <p class="subtitle">Voici votre tableau de bord professionnel</p>
+    </div>
+    <div class="quick-stats">
+      <div class="stat-item">
+        <i class="fas fa-bell"></i>
+        <span>{{ stats.alerts }} alertes</span>
+      </div>
+      <div class="stat-item">
+        <i class="fas fa-tasks"></i>
+        <span>3 tâches en attente</span>
+      </div>
+    </div>
+  </section>
 
-  <section class="card-group">
-    <div class="card card-primary">
-      <div class="card-icon"><i class="fas fa-users"></i></div>
-      <div>
+  <section class="metrics-grid">
+    <div class="metric-card clients-card">
+      <div class="card-header">
+        <i class="fas fa-users card-icon"></i>
         <h3>Clients</h3>
-        <div class="value">{{ stats.clients }}</div>
-        <div class="badge">+12% ce mois</div>
       </div>
+      <div class="card-body">
+        <span class="metric-value">{{ stats.clients | number }}</span>
+        <span class="metric-trend positive">+12% ce mois</span>
+      </div>
+      <button class="card-action" (click)="goToClient()">
+        Voir détails <i class="fas fa-arrow-right"></i>
+      </button>
     </div>
 
-    <div class="card card-success">
-      <div class="card-icon"><i class="fas fa-exchange-alt"></i></div>
-      <div>
+    <div class="metric-card transactions-card">
+      <div class="card-header">
+        <i class="fas fa-exchange-alt card-icon"></i>
         <h3>Transactions</h3>
-        <div class="value">{{ stats.transactions }}</div>
-        <div class="badge">+8% aujourd'hui</div>
       </div>
+      <div class="card-body">
+        <span class="metric-value">{{ stats.transactions | number }}</span>
+        <span class="metric-trend positive">+8% aujourd'hui</span>
+      </div>
+      <button class="card-action" (click)="voirHistoriquePaiements()">
+        Voir détails <i class="fas fa-arrow-right"></i>
+      </button>
     </div>
 
-    <div class="card card-warning">
-      <div class="card-icon"><i class="fas fa-exclamation-triangle"></i></div>
-      <div>
+    <div class="metric-card alerts-card">
+      <div class="card-header">
+        <i class="fas fa-exclamation-triangle card-icon"></i>
         <h3>Alertes</h3>
-        <div class="value">{{ stats.alerts }}</div>
-        <div class="badge">À traiter</div>
+      </div>
+      <div class="card-body">
+        <span class="metric-value">{{ stats.alerts }}</span>
+        <span class="metric-trend warning">À traiter</span>
+      </div>
+      <button class="card-action">
+        Voir alertes <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
+
+    <div class="metric-card operations-card">
+      <div class="card-header">
+        <i class="fas fa-calculator card-icon"></i>
+        <h3>Opérations</h3>
+      </div>
+      <div class="card-body">
+        <div class="operation-buttons">
+          <button (click)="effectuerPaiement()" class="operation-btn">
+            <i class="fas fa-money-bill-wave"></i> Paiement
+          </button>
+          <button (click)="recupererFacture()" class="operation-btn">
+            <i class="fas fa-file-invoice"></i> Facture
+          </button>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="actions">
-    <button (click)="goToClient()" class="action-btn primary">
-      <i class="fas fa-user-cog"></i> Gérer les clients
-    </button>
-    <button class="action-btn secondary">
-      <i class="fas fa-list-alt"></i> Voir les transactions
-    </button>
+  <section class="quick-actions">
+    <h2 class="section-title">Actions rapides</h2>
+    <div class="action-buttons">
+      <button class="action-btn new-client" (click)="goToClient()">
+        Gérer client <i class="fas fa-user-plus"></i>
+      </button>
+
+
+
+      <button class="action-btn transaction-list"(click)=" voirHistoriquePaiements()">
+        <i class="fas fa-list"></i> Liste transactions
+      </button>
+      <button class="action-btn reports">
+        <i class="fas fa-chart-bar"></i> Rapports
+      </button>
+      <button class="action-btn settings">
+        <i class="fas fa-cog"></i> Paramètres
+      </button>
+    </div>
   </section>
+
+  
 </main>

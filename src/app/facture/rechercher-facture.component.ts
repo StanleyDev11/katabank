@@ -41,9 +41,13 @@ rechercher() {
   });
 }
 
+retourDashboard() {
+    this.router.navigate(['/dashboard-admin']); // Adaptez le chemin selon votre route
+  }
 
 payerFacture() {
 if (!this.facture) return;
+
 
 
 // Redirige vers /paiement/creer avec les infos de la facture dans l'état de navigation

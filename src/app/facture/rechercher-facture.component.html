@@ -1,29 +1,74 @@
+
+
+ 
+
 <div class="facture-search-container">
-  <h2>🔍 Rechercher une facture client</h2>
+    <!-- Bouton Retour ajouté ici -->
+  <button class="btn-retour" (click)="retourDashboard()">
+    <i class="fas fa-arrow-left"></i> Retour au tableau de bord
+  </button>
+  <div class="search-header">
+    <div class="search-icon">
+      <i class="fas fa-file-invoice-dollar"></i>
+    </div>
+    
+    <h2>Rechercher une facture client</h2>
+    <p class="search-subtitle">Entrez la référence de la facture à retrouver</p>
+  </div>
 
   <form (ngSubmit)="rechercher()" class="form-recherche">
-    <input
-      type="text"
-      [(ngModel)]="reference"
-      name="reference"
-      placeholder="Référence de la facture"
-      required
-    />
-    <button type="submit">Rechercher</button>
+    <div class="search-input-group">
+      <i class="fas fa-search"></i>
+      <input
+        type="text"
+        [(ngModel)]="reference"
+        name="reference"
+        placeholder="Référence de la facture (ex: FAC-2023-001)"
+        required
+      />
+      <button type="submit" class="search-btn">
+        <i class="fas fa-search"></i> Rechercher
+      </button>
+    </div>
   </form>
 
-  <p *ngIf="loading">⏳ Recherche en cours...</p>
-  <p class="error-msg" *ngIf="errorMessage">{{ errorMessage }}</p>
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Recherche en cours...</p>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-state">
+    <i class="fas fa-exclamation-circle"></i>
+    <p>{{ errorMessage }}</p>
+  </div>
 
   <div *ngIf="facture" class="facture-result">
-    <h3>🧾 Référence : {{ facture.reference }}</h3>
-    <p><strong>Description :</strong> {{ facture.description }}</p>
-    <p><strong>Montant :</strong> {{ facture.montant | number: '1.0-2' }} F CFA</p>
-    <p><strong>Facturier :</strong> {{ facture.facturier }}</p>
-
+    <div class="facture-header">
+      <i class="fas fa-file-alt"></i>
+      <h3>Facture {{ facture.reference }}</h3>
+    </div>
     
-     <button class="btn-pay" (click)="payerFacture()">💳 Payer cette facture</button>
+    <div class="facture-details">
+      <div class="detail-row">
+        <span class="detail-label">Description :</span>
+        <span class="detail-value">{{ facture.description }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Montant :</span>
+        <span class="detail-value highlight">{{ facture.montant | number: '1.0-2' }} F CFA</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Facturier :</span>
+        <span class="detail-value">{{ facture.facturier }}</span>
+      </div>
+      <div class="detail-row" *ngIf="facture.dateEmission">
+        <span class="detail-label">Date d'émission :</span>
+        <span class="detail-value">{{ facture.dateEmission | date: 'dd/MM/yyyy' }}</span>
+      </div>
+    </div>
 
-
+    <button class="btn-pay" (click)="payerFacture()">
+      <i class="fas fa-credit-card"></i> Payer cette facture
+    </button>
   </div>
 </div>
