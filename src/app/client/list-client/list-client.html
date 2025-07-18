@@ -1,92 +1,142 @@
+
 <div class="clients-container">
-  <div class="header-bar">
-    <h2>Liste des Clients</h2>
-    <div class="actions">
-      <button class="btn" (click)="goToDashboard()">🏠 Retour Dashboard</button>
-      <button class="btn" (click)="exportToPdf()">📄 Export PDF</button>
-      <button class="btn" (click)="exportToExcel()">📊 Export Excel</button>
-      <button class="btn" (click)="toggleAdminPrompt()">⚙️ CRUD</button>
+  <!-- En-tête amélioré avec icône et boutons organisés -->
+  <div class="header-section">
+    <div class="header-title">
+      <img src="assets/client-icon.png" alt="Client Icon" class="header-icon">
+      <h1>Gestion des Clients</h1>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-dashboard" (click)="goToDashboard()">
+        <i class="fas fa-home"></i> Tableau de bord
+      </button>
+      <button class="btn btn-reload" (click)="reloadPage()">
+    <i class="fas fa-sync-alt"></i> Recharger
+  </button>
+      <button class="btn btn-admin" (click)="toggleAdminPrompt()">
+        <i class="fas fa-user-shield"></i> Mode Admin
+      </button>
     </div>
   </div>
 
-  <!-- ✅ Messages de succès ou d’erreur -->
-  <div *ngIf="messageSuccess" class="alert success-alert">
-    ✅ {{ messageSuccess }}
+  <!-- Section de recherche améliorée -->
+  <div class="search-section">
+    <div class="search-container">
+      <i class="fas fa-search search-icon"></i>
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        placeholder="Rechercher un client par nom, prénom, code..."
+        class="search-input"
+      />
+      <button class="btn btn-add-mobile" (click)="ajouterClient()">
+        <i class="fas fa-plus"></i>
+      </button>
+    </div>
+    <button class="btn btn-add-desktop" (click)="ajouterClient()">
+      <i class="fas fa-plus"></i> Nouveau Client
+    </button>
   </div>
-  <div *ngIf="messageError" class="alert error-alert">
-    ❌ {{ messageError }}
+
+  <!-- Messages d'alerte stylisés -->
+  <div *ngIf="messageSuccess" class="alert alert-success">
+    <i class="fas fa-check-circle"></i> {{ messageSuccess }}
+  </div>
+  <div *ngIf="messageError" class="alert alert-error">
+    <i class="fas fa-exclamation-circle"></i> {{ messageError }}
   </div>
 
-  <input
-    type="text"
-    [(ngModel)]="searchText"
-    placeholder="🔍 Rechercher un client..."
-    class="search-input"
-  />
+  <!-- Formulaire admin discret -->
+  <div *ngIf="showAdminPrompt" class="admin-prompt">
+    <div class="admin-prompt-content">
+      <h3>Accès Administrateur</h3>
+      <form (submit)="validerCodeAdmin()" autocomplete="off">
+        <div class="form-group">
+          <input
+            type="password"
+            [(ngModel)]="adminCode"
+            name="adminCode"
+            placeholder="Code d'accès"
+            class="form-input"
+            autocomplete="off"
+          />
+          <button class="btn btn-validate" type="submit">
+            <i class="fas fa-check"></i> Valider
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 
-  <!-- Formulaire affiché uniquement si showAdminPrompt est true -->
-  <form *ngIf="showAdminPrompt" (submit)="validerCodeAdmin()" autocomplete="off" class="admin-code-form">
-    <input
-      type="password"
-      [(ngModel)]="adminCode"
-      name="adminCode"
-      placeholder="Entrez le code admin"
-      class="search-input"
-      style="max-width: 250px"
-      autocomplete="off"
-    />
-    <button class="btn" type="submit">Valider</button>
-  </form>
-
-  <!-- Bouton ajout client -->
-  <button class="btn-add" (click)="ajouterClient()">➕ Ajouter un client</button>
-
-  <!-- Grille des cartes -->
-  <div class="card-grid">
-    <div class="card" *ngFor="let client of filteredClients">
-      <div class="icon-container">
-        <img src="assets/client-icon.png" alt="Client Icon" />
+  <!-- Grille de clients améliorée -->
+  <div class="client-grid">
+    <div *ngFor="let client of filteredClients" class="client-card">
+      <div class="card-header">
+        <div class="client-avatar">
+          {{ client.prenom.charAt(0) }}{{ client.nom.charAt(0) }}
+        </div>
+        <div class="client-name">
+          <h3>{{ client.prenom }} {{ client.nom }}</h3>
+          <span class="client-id">#{{ client.codeClient }}</span>
+        </div>
       </div>
-      <h3>{{ client.nom }} {{ client.prenom }}</h3>
-      <p><strong>Code Client :</strong> {{ client.codeClient }}</p>
-      <p><strong>Compte :</strong> {{ client.numeroCompte }}</p>
-      <p>
-        <strong>Solde :</strong>
-        <span [ngClass]="client.solde >= 0 ? 'badge-positive' : 'badge-negative'">
-          {{ client.solde | number: '1.2-2' }} F CFA
-        </span>
-      </p>
-      <div class="card-buttons" *ngIf="showCrudButtons">
-        <button class="btn-modifier" (click)="modifierClient(client)">✏️ Modifier</button>
-        <button class="btn-supprimer" (click)="supprimerClient(client.codeClient)">🗑️ Supprimer</button>
+      
+      <div class="card-body">
+        <div class="client-info">
+          <label>Compte</label>
+          <span class="info-value">{{ client.numeroCompte }}</span>
+        </div>
+        
+        <div class="client-info">
+          <label>Solde</label>
+          <span [ngClass]="{
+            'positive': client.solde >= 0,
+            'negative': client.solde < 0
+          }">
+            {{ client.solde | number: '1.2-2' }} F CFA
+          </span>
+        </div>
+      </div>
+      
+      <div *ngIf="showCrudButtons" class="card-footer">
+        <button class="btn-action btn-edit" (click)="modifierClient(client)">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="btn-action btn-delete" (click)="supprimerClient(client.codeClient)">
+          <i class="fas fa-trash-alt"></i>
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- Modale ajout -->
-  <app-add-client
-    *ngIf="showAddModal"
+  <!-- Modales (garder votre implémentation existante) -->
+  <app-add-client *ngIf="showAddModal" 
     (clientAdded)="onClientAdded($event)"
     (close)="showAddModal = false">
   </app-add-client>
 
-  <!-- Modale modification -->
-  <app-edit-client
-    *ngIf="clientToEdit"
+  <app-edit-client *ngIf="clientToEdit"
     [client]="clientToEdit"
     (clientUpdated)="onClientUpdated($event)"
     (close)="clientToEdit = null">
   </app-edit-client>
 
-  <!-- 🔴 Modale de confirmation de suppression -->
   <div class="modal-backdrop" *ngIf="showDeleteConfirmModal">
-    <div class="modal">
-      <h2>⚠️ Confirmation</h2>
-      <p>Voulez-vous vraiment supprimer le client <strong>{{ clientToDelete?.nom }} {{ clientToDelete?.prenom }}</strong> ?</p>
-
-      <div class="modal-buttons">
-        <button class="btn-cancel" (click)="annulerSuppression()">Annuler</button>
-        <button class="btn-save" (click)="confirmerSuppression()">Oui, supprimer</button>
+    <div class="confirmation-modal">
+      <div class="modal-header">
+        <h3><i class="fas fa-exclamation-triangle warning-icon"></i> Confirmation</h3>
+      </div>
+      <div class="modal-body">
+        <p>Êtes-vous sûr de vouloir supprimer définitivement le client :</p>
+        <p class="client-to-delete">{{ clientToDelete?.prenom }} {{ clientToDelete?.nom }} ({{ clientToDelete?.codeClient }}) ?</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-cancel" (click)="annulerSuppression()">
+          <i class="fas fa-times"></i> Annuler
+        </button>
+        <button class="btn btn-confirm" (click)="confirmerSuppression()">
+          <i class="fas fa-check"></i> Confirmer
+        </button>
       </div>
     </div>
   </div>

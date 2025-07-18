@@ -1,7 +1,6 @@
 <div class="modal-backdrop" (click)="fermerParClicExterieur($event)">
   <div class="modal" (click)="$event.stopPropagation()">
     <!-- Bouton de fermeture -->
-    <button class="btn-close" type="button" (click)="close.emit()">✖</button>
 
     <h3>➕ Ajouter un client</h3>
     <form (ngSubmit)="ajouter()">

@@ -139,6 +139,8 @@ export class ListClientComponent implements OnInit {
     });
   }
 
+  
+
   annulerSuppression(): void {
     this.clientToDelete = null;
     this.showDeleteConfirmModal = false;
@@ -159,15 +161,9 @@ export class ListClientComponent implements OnInit {
     }
   }
 
-  exportToPdf(): void {
-    this.showMessage("Export PDF en cours (à implémenter)", 'success');
-  }
+ 
 
-  exportToExcel(): void {
-    this.showMessage("Export Excel en cours (à implémenter)", 'success');
-  }
-
-  // ✅ Fonction pour afficher un message et l'effacer après 5 sec
+  //  Fonction pour afficher un message et l'effacer après 5 sec
   private showMessage(message: string, type: 'success' | 'error') {
     if (type === 'success') {
       this.messageSuccess = message;
@@ -178,5 +174,9 @@ export class ListClientComponent implements OnInit {
       this.messageSuccess = '';
       this.messageError = '';
     }, 5000);
+  }
+  reloadPage(): void {
+  // Solution 1: Rechargement simple
+  window.location.reload();
   }
 }

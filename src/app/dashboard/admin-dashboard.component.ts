@@ -11,8 +11,8 @@ import { CommonModule } from '@angular/common';
 })
 export class AdminDashboardComponent {
   stats = {
-    clients: 1248,
-    transactions: 342,
+    clients: 12,
+    transactions: 20,
     alerts: 5
   };
 
